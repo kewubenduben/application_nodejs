@@ -22,10 +22,14 @@ include Chef::Mixin::LanguageIncludeRecipe
 
 action :before_compile do
 
-  include_recipe 'nodejs::install_from_source'
+  include_recipe '#{node[application_nodejs][node_type]}::install_from_source'
 
   if new_resource.npm
-    include_recipe 'nodejs::npm'
+    begin
+      include_recipe '#{node[application_nodejs][node_type]}::npm'
+    rescue
+      Chef::Log.debug "The npm package is already packaged on #{node[application_nodejs][node_type]}"
+    end
   end
 
   unless new_resource.restart_command
@@ -80,7 +84,7 @@ action :before_restart do
     variables(
       :user => new_resource.owner,
       :group => new_resource.group,
-      :node_dir => node['nodejs']['dir'],
+      :node_dir => node[node['application_nodejs']['node_type']]['dir'],
       :app_dir => new_resource.release_path,
       :entry => new_resource.entry_point,
       :environment => new_resource.environment

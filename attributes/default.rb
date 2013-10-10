@@ -1,0 +1,1 @@
+default['application_nodejs']['node_type'] = 'nodejs'
