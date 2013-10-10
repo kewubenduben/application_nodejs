@@ -74,6 +74,22 @@ end
 
 action :before_restart do
 
+  # include_recipe "supervisor"
+
+  # supervisor_service "#{new_resource.application.name}.supervise" do
+  #   action :enable
+  #   autostart true
+  #   autorestart true
+  #   user new_resource.owner
+  #   group new_resource.group
+  #   command "slc run #{new_resource.release_path}#{new_resource.entry_point}"
+  #   stopsignal "INT"
+  #   stopasgroup true
+  #   killasgroup true
+  #   stopwaitsecs 20
+  #   directory new_resource.release_path
+  # end
+
   template "#{new_resource.application.name}.upstart.conf" do
     path "/etc/init/#{new_resource.application.name}_nodejs.conf"
     source new_resource.template ? new_resource.template : 'nodejs.upstart.conf.erb'
