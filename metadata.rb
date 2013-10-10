@@ -10,4 +10,4 @@ version          "1.1.1"
 %w{ nodejs nginx openssl supervisor }.each {|c| depends c}
 
 depends          "application", "= 2.0.4"
-suggests         "strongloop"
+depends          "strongloop"
