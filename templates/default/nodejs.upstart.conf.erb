@@ -4,6 +4,8 @@ description "Node.js Application Server"
 start on (local-filesystems and net-device-up IFACE!=lo)
 stop on [!12345]
 
+respawn
+
 console log
 
 <% @environment.each do |key, value| -%>
@@ -16,4 +18,9 @@ setuid <%= @user %>
 setgid <%= @group %>
 <% end -%>
 chdir <%= @app_dir %>
+
+<% if @node_type == "strongloop" %>
 exec <%= @node_dir %>/bin/node <%= @entry %>
+<% else %>
+exec <%= @node_dir %>/bin/slc run <%= @entry %>
+<% end %>
