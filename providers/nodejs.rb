@@ -59,11 +59,20 @@ end
 action :before_migrate do
 
   if new_resource.npm
-    execute 'npm install' do
-      cwd new_resource.release_path
-      user new_resource.owner
-      group new_resource.group
-      environment new_resource.environment.merge({ 'HOME' => new_resource.shared_path })
+    if new_resource.node_type == "nodejs"
+      execute 'npm install' do
+        cwd new_resource.release_path
+        user new_resource.owner
+        group new_resource.group
+        environment new_resource.environment.merge({ 'HOME' => new_resource.shared_path })
+      end
+    else
+      execute 'slc npm install' do
+        cwd new_resource.release_path
+        user new_resource.owner
+        group new_resource.group
+        environment new_resource.environment.merge({ 'HOME' => new_resource.shared_path })
+      end
     end
   end
 
@@ -73,22 +82,6 @@ action :before_symlink do
 end
 
 action :before_restart do
-
-  # include_recipe "supervisor"
-
-  # supervisor_service "#{new_resource.application.name}.supervise" do
-  #   action :enable
-  #   autostart true
-  #   autorestart true
-  #   user new_resource.owner
-  #   group new_resource.group
-  #   command "slc run #{new_resource.release_path}#{new_resource.entry_point}"
-  #   stopsignal "INT"
-  #   stopasgroup true
-  #   killasgroup true
-  #   stopwaitsecs 20
-  #   directory new_resource.release_path
-  # end
 
   template "#{new_resource.application.name}.upstart.conf" do
     path "/etc/init/#{new_resource.application.name}_nodejs.conf"
@@ -100,7 +93,7 @@ action :before_restart do
     variables(
       :user => new_resource.owner,
       :group => new_resource.group,
-      :node_dir => node[node['application_nodejs']['node_type']]['dir'],
+      :node_dir => node[new_resource.node_type]['dir'],
       :app_dir => new_resource.release_path,
       :entry => new_resource.entry_point,
       :environment => new_resource.environment
