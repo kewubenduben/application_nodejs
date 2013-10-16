@@ -22,13 +22,13 @@ include Chef::Mixin::LanguageIncludeRecipe
 
 action :before_compile do
 
-  include_recipe '#{node[application_nodejs][node_type]}::install_from_source'
+  include_recipe "#{node["application_nodejs"]["node_type"]}::install_from_source"
 
   if new_resource.npm
     begin
-      include_recipe '#{node[application_nodejs][node_type]}::npm'
+      include_recipe '#{node["application_nodejs"]["node_type"]}::npm'
     rescue
-      Chef::Log.debug "The npm package is already packaged on #{node[application_nodejs][node_type]}"
+      Chef::Log.debug "The npm package is already packaged on #{node["application_nodejs"]["node_type"]}"
     end
   end
 
