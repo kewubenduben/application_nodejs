@@ -34,14 +34,11 @@ action :before_deploy do
 end
 
 action :before_migrate do
-
-  if new_resource.npm
-    execute 'slc npm install' do
-      cwd new_resource.release_path
-      user new_resource.owner
-      group new_resource.group
-      environment new_resource.environment.merge({ 'HOME' => new_resource.shared_path })
-    end
+  execute 'slc npm install' do
+    cwd new_resource.release_path
+    user new_resource.owner
+    group new_resource.group
+    environment new_resource.environment.merge({ 'HOME' => new_resource.shared_path })
   end
 
 end
