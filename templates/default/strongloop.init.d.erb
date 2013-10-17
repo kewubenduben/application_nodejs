@@ -1,0 +1,28 @@
+case "$1" in
+    'start')
+        cd <%= @release_path %>
+        forever slnode <%= @entry =>
+        start
+        ;;
+
+    'stop')
+        killall -9 forever
+        stopit
+        ;;
+
+    'restart')
+        stopit
+        start
+        ;;
+
+    'status')
+        ps aux | grep forever | grep <%= @entry =>
+        ;;
+
+    *)
+        echo "Usage: $0 { console | start | stop | restart | status | dump }"
+        exit 1
+        ;;
+esac
+
+exit 0

@@ -7,5 +7,6 @@ version          "1.0.2"
 
 depends          "nodejs"
 depends          "application"
+depends          "strongloop"
 
 supports 'ubuntu', ">= 12.04"
